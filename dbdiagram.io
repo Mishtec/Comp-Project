@@ -3,8 +3,8 @@
 
 Table Reservation as Res {
   Reservation_ID INT [pk]
-  Client_ID INT [ref: < C.Client_ID]
-  Vehicle_ID INT [ref: - V.Vehicle_ID]
+  Client_ID INT [ref: > C.Client_ID]
+  Vehicle_ID INT [ref: < V.Vehicle_ID]
   Rendezvous VARCHAR(255)
   Appointment DATETIME // format YYYY-MM-DD hh:mm:ss
   Expected_Duration INT // time in minutes
@@ -27,7 +27,7 @@ Table Vehicle as V{
 
 Table Mission as M{
   Mission_ID INT [pk]
-  Client_ID INT [ref: < C.Client_ID]
+  Client_ID INT [ref: > C.Client_ID]
   Start_Mission DATETIME
   END_Mission DATETIME
   Actual_Start_Mission DATETIME
