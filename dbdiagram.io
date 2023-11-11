@@ -20,4 +20,35 @@ Table Client as C  {
 
 Table Vehicle as V{
   Vehicle_ID INT [pk]
+  Odometer INT [not null]
+  Duration DECIMAL (1,2) //proportional fraction
+  Browsed_Kilometers DECIMAL (1,2) //proportianl fraction
 }
+
+Table Mission as M{
+  Mission_ID INT [pk]
+  Client_ID INT [ref: < C.Client_ID]
+  Start_Mission DATETIME
+  END_Mission DATETIME
+  Actual_Start_Mission DATETIME
+  Actual_END_Mission DATETIME
+  Odometer_Start INT [not null]
+  Odometer_Return INT [not null]
+
+}
+
+
+// Billing
+Table Invoice as Invoi{
+  Invoice_ID INT [pk]
+  Mission_ID INT [ref: < M.Mission_ID]
+  Amount DECIMAL (10,2)
+  Payment Payment_Type
+}
+
+enum Payment {
+    Credit_Card
+    Cash
+    Check
+}
+
