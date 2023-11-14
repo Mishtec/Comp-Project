@@ -47,7 +47,7 @@ Table Invoice as Invoi{
   Payment Payment_Type [not null]
 }
 
-enum Payment {
+enum Payment_Type {
     Credit_Card
     Cash
     Check
