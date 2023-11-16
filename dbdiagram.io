@@ -3,8 +3,8 @@
 
 Table Reservation as Res {
   Reservation_ID INT [pk] // pk can never be null
-  Client_ID INT [ref: > C.Client_ID, not null]
-  Vehicle_ID INT [ref: < V.Vehicle_ID, not null]
+  Client_ID INT [ref: > C.Client_ID] // if referenced is pk, then...
+  Vehicle_ID INT [ref: < V.Vehicle_ID]
   Rendezvous VARCHAR(255) [not null]
   Appointment DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
   Expected_Duration INT [note: "Expected_Duration > 1 year"]// time in minutes
@@ -28,7 +28,7 @@ Table Vehicle as V{
 
 Table Mission as M{
   Mission_ID INT [pk]
-  Client_ID INT [ref: > C.Client_ID, not null]
+  Client_ID INT [ref: > C.Client_ID]
   Start_Mission DATETIME
   END_Mission DATETIME
   Actual_Start_Mission DATETIME [not null]
@@ -42,7 +42,7 @@ Table Mission as M{
 // Billing
 Table Invoice as Invoi{
   Invoice_ID INT [pk]
-  Mission_ID INT [ref: < M.Mission_ID, not null]
+  Mission_ID INT [ref: < M.Mission_ID]
   Amount DECIMAL (10,2) [not null]
   Payment Payment_Type [not null]
 }
