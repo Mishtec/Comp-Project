@@ -3,7 +3,7 @@
 
 Table Reservation as Res {
   Reservation_ID INT [pk] // pk can never be null
-  Client_ID INT [ref: > C.Client_ID] // if referenced is pk, then...
+  Client_ID INT [ref: > C.Client_ID] // if referenced is pk, then won't be null, unless deleted
   Vehicle_ID INT [ref: < V.Vehicle_ID]
   Rendezvous VARCHAR(255) [not null]
   Appointment DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
