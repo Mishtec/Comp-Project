@@ -16,15 +16,19 @@ CREATE TABLE Invoice (
 CREATE TABLE Client (
   Client_ID INT PRIMARY KEY,
   Name VARCHAR(255),
-  Address VARCHAR(255)
+  Address VARCHAR(255),
 );
 
 CREATE TABLE Business (
-  Name VARCHAR(255) PRIMARY KEY
+  Business_ID INT PRIMARY KEY,
+  Name VARCHAR(255) UNIQUE NOT NULL,
+  FOREIGN KEY (Business_ID) REFERENCES Client (Client_ID)
 );
 
 CREATE TABLE Person (
-  Name VARCHAR(255) PRIMARY KEY
+  Person_ID INT PRIMARY KEY,
+  Name VARCHAR(255) NOT NULL,
+  FOREIGN KEY (Person_ID) REFERENCES Client (Client_ID)
 );
 
 CREATE TABLE Reservation (
