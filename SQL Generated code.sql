@@ -8,21 +8,22 @@ CREATE TABLE `Invoice` (
   `Invoice_ID` INT PRIMARY KEY,
   `Amount` DECIMAL(10,2) NOT NULL,
   `Payment` ENUM ('Credit_Card', 'Cash', 'Check') NOT NULL,
-  `Paid` Bool NOT NULL DEFAULT "0"
+  `Paid` BOOLEAN NOT NULL DEFAULT "0"
 );
 
 CREATE TABLE `Client` (
   `Client_ID` INT PRIMARY KEY,
-  `Name` VARCHAR(255),
   `Address` VARCHAR(255)
 );
 
 CREATE TABLE `Business` (
-  `Name` VARCHAR(255) UNIQUE NOT NULL
+  `Business_ID` INT UNIQUE NOT NULL,
+  `Name` VARCHAR(255)
 );
 
 CREATE TABLE `Person` (
-  `Name` VARCHAR(255) NOT NULL
+  `Person_ID` INT NOT NULL,
+  `Name` VARCHAR(255)
 );
 
 CREATE TABLE `Reservation` (
@@ -70,9 +71,9 @@ ALTER TABLE `LineOrder` ADD FOREIGN KEY (`Mission_ID`) REFERENCES `Mission` (`Mi
 
 ALTER TABLE `LineOrder` ADD FOREIGN KEY (`Invoice_ID`) REFERENCES `Invoice` (`Invoice_ID`);
 
-ALTER TABLE `Client` ADD FOREIGN KEY (`Name`) REFERENCES `Business` (`Name`);
+ALTER TABLE `Business` ADD FOREIGN KEY (`Business_ID`) REFERENCES `Client` (`Client_ID`);
 
-ALTER TABLE `Client` ADD FOREIGN KEY (`Name`) REFERENCES `Person` (`Name`);
+ALTER TABLE `Person` ADD FOREIGN KEY (`Person_ID`) REFERENCES `Client` (`Client_ID`);
 
 ALTER TABLE `Reservation` ADD FOREIGN KEY (`Client_ID`) REFERENCES `Client` (`Client_ID`);
 
