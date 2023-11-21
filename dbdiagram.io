@@ -16,21 +16,22 @@ Table Invoice as Invoi{
   Invoice_ID INT [pk]
   Amount DECIMAL (10,2) [not null]
   Payment Payment_Type [not null]
-  Paid Bool [not null, default: "0"]
+  Paid BOOLEAN [not null, default: "0"]
 }
 
 Table Client as C  {
   Client_ID INT [pk]
-  Name VARCHAR(255) [ref: - B.Name, ref: - P.Name]
   Address VARCHAR(255) 
 }
 
 Table Business as B{
-  Name VARCHAR(255) UNIQUE [not null]
+  Business_ID INT UNIQUE [not null, ref: - C.Client_ID]
+  Name VARCHAR(255)
 }
 
 Table Person as P{
-  Name VARCHAR(255) [not null]
+  Person_ID INT [not null, ref: - C.Client_ID]
+  Name VARCHAR(255)
 }
 
 Table Reservation as Res {
