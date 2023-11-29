@@ -26,6 +26,8 @@ Table Mission {
   vehicle_id INT  [ref: > Vehicle.vehicle_id]
   driver_id INT [ref: > Driver.driver_id]
   reservation_id INT [ref: > Reservation.reservation_id]
+  expected_start DATETIME
+  expected_end DATETIME
   actual_start DATETIME
   actual_end DATETIME
   odometer_start INT [not null]
@@ -52,8 +54,8 @@ Table Reservation {
   client_id INT [ref: > C.Client_ID]
   requested_vehicle_type VARCHAR(30) [not null] 
   location VARCHAR(255) [not null]
-  appointment_start DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
-  appointment_end DATETIME [note: "Expected_Duration > 1 year"]// time in minutes
+  appointment_date DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
+  appointment_duration DATETIME [note: "Expected_Duration > 1 year"]// time in minutes
   // Check Expected_Duration > 525600 // 1 year in minutes
   // The expected duration of making disposal of vehicle and driver.
   // Assume Expected_Duration = for both vehicle and driver
