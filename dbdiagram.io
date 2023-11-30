@@ -14,7 +14,7 @@ Table LineOrder as LO{
 Table Invoice as Invoi{
   Invoice_ID INT [pk]
   Tax_ID INT [ref: > T.Tax_ID]
-  Payment Payment_Type [not null]
+  Payment_Type Payment_Type [not null]
   isPaid BOOLEAN [not null, default: "0"]
 }
 
@@ -44,7 +44,7 @@ Table Reservation as Res {
   Client_ID INT [ref: > C.Client_ID] // if referenced is pk, then won't be null, unless deleted
   Vehicle_Type Vehicle_Type [not null] 
   Location VARCHAR(255) [not null]
-  Appointment DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
+  Appointment_Date DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
   Reservation_Length INT [note: "Expected_Duration > 1 year"]// time in minutes
   // Check Expected_Duration > 525600 // 1 year in minutes
   // The expected duration of making disposal of vehicle and driver.
@@ -53,9 +53,9 @@ Table Reservation as Res {
 
 Table Vehicle as V{
   Vehicle_ID INT [pk]
-  Odometer INT [not null]
-  Hourly_rate DECIMAL (5,2) [not null] //proportional fraction
-  Kilometer_rate DECIMAL (5,2) [not null] //proportianl fraction
+  Brand_Name VARCHAR(255)
+  Hourly_Rate DECIMAL (5,2) [not null] //proportional fraction
+  Kilometer_Rate DECIMAL (5,2) [not null] //proportianl fraction
   Vehicle_Type Vehicle_Type [not null]
 }
 
@@ -78,12 +78,11 @@ Table Mission as M{
   Driver_ID INT [ref: < D.Driver_ID]
   Reservation_ID INT [ref: > Res.Reservation_ID]
   Start_Mission DATETIME
-  END_Mission DATETIME
+  End_Mission DATETIME
   Actual_Start_Mission DATETIME [not null]
-  Actual_END_Mission DATETIME [not null]
+  Actual_End_Mission DATETIME [not null]
   Odometer_Start INT [not null]
   Odometer_Return INT [not null]
-
 }
 
 
