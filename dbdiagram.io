@@ -6,17 +6,22 @@
 
 
 Table LineOrder as LO{
-  Line_ID INT [pk]
-  Mission_ID INT [ref: > M.Mission_ID]
-  Invoice_ID INT [ref: > Invoi.Invoice_ID]
+  Mission_ID INT [pk, ref: > M.Mission_ID]
+  Invoice_ID INT [pk, ref: > Invoi.Invoice_ID]
 }
 
 // Billing
 Table Invoice as Invoi{
   Invoice_ID INT [pk]
-  Amount DECIMAL (10,2) [not null]
+  Tax_ID INT [ref: > T.Tax_ID]
   Payment Payment_Type [not null]
-  Paid BOOLEAN [not null, default: "0"]
+  isPaid BOOLEAN [not null, default: "0"]
+}
+
+Table Tax as T {
+  Tax_ID INT [pk]
+  Federal_tax DECIMAL(4, 2) [not null]
+  Provincal_tax DECIMAL(4, 2) [not null]
 }
 
 Table Client as C  {
@@ -25,12 +30,12 @@ Table Client as C  {
 }
 
 Table Business as B{
-  Business_ID INT UNIQUE [not null, ref: - C.Client_ID]
-  Name VARCHAR(255)
+  Business_ID INT  [pk, ref: - C.Client_ID]
+  Name VARCHAR(255) UNIQUE
 }
 
 Table Person as P{
-  Person_ID INT [not null, ref: - C.Client_ID]
+  Person_ID INT [pk, ref: - C.Client_ID]
   Name VARCHAR(255)
 }
 
@@ -38,9 +43,9 @@ Table Reservation as Res {
   Reservation_ID INT [pk] // pk can never be null
   Client_ID INT [ref: > C.Client_ID] // if referenced is pk, then won't be null, unless deleted
   Vehicle_Type Vehicle_Type [not null] 
-  Rendezvous VARCHAR(255) [not null]
+  Location VARCHAR(255) [not null]
   Appointment DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
-  Expected_Duration INT [note: "Expected_Duration > 1 year"]// time in minutes
+  Reservation_Length INT [note: "Expected_Duration > 1 year"]// time in minutes
   // Check Expected_Duration > 525600 // 1 year in minutes
   // The expected duration of making disposal of vehicle and driver.
   // Assume Expected_Duration = for both vehicle and driver
@@ -49,8 +54,8 @@ Table Reservation as Res {
 Table Vehicle as V{
   Vehicle_ID INT [pk]
   Odometer INT [not null]
-  Duration DECIMAL (1,2) [not null] //proportional fraction
-  Browsed_Kilometers DECIMAL (1,2) [not null] //proportianl fraction
+  Hourly_rate DECIMAL (5,2) [not null] //proportional fraction
+  Kilometer_rate DECIMAL (5,2) [not null] //proportianl fraction
   Vehicle_Type Vehicle_Type [not null]
 }
 
@@ -69,9 +74,9 @@ Table DriverLicence as DL {
 
 Table Mission as M{
   Mission_ID INT [pk]
-  Client_ID INT [ref: > C.Client_ID]
   Vehicle_ID INT  [ref: < V.Vehicle_ID]
   Driver_ID INT [ref: < D.Driver_ID]
+  Reservation_ID INT [ref: > Res.Reservation_ID]
   Start_Mission DATETIME
   END_Mission DATETIME
   Actual_Start_Mission DATETIME [not null]
