@@ -3,89 +3,73 @@
 
 // Contriant: It has a fleet of a hundred trucks of all types,
 
-Table Tax {
-  tax_id INT [pK]
-  federal_taxes DECIMAL (4,2) [not null]
-  provincial_taxes DECIMAL (4,2)
+Table Vehicle as V{
+  Vehicle_ID INT [pk]
+  Brand_Name VARCHAR(255)
+  Hourly_Rate DECIMAL (5,2) [not null] //proportional fraction
+  Kilometer_Rate DECIMAL (5,2) [not null] //proportianl fraction
+  Vehicle_Type Vehicle_Type [not null]
 }
 
-Table Invoice {
-  invoice_id INT [pk]
-  tax_id INT [ref: > Tax.tax_id]
-  payment_method VARCHAR(20)
-  is_paid BOOLEAN [not null, default: 0]
+Table Driver as D {
+  Driver_ID INT [pk]
+  First_Name VARCHAR(255) 
+  Last_Name VARCHAR(255) 
+  License_Type Vehicle_Type
 }
 
-Table LineOrder {
-  Mission_ID INT [pK, ref: > Mission.mission_id]
-  Invoice_ID INT [pK, ref: > Invoice.invoice_id]
+Table Client as C  {
+  Client_ID INT [pk]
+  Client_Name VARCHAR(255)
+  Address VARCHAR(255) 
+  Client_Type Client_Type
 }
 
-Table Mission {
-  mission_id INT [pk]
-  vehicle_id INT  [ref: > Vehicle.vehicle_id]
-  driver_id INT [ref: > Driver.driver_id]
-  reservation_id INT [ref: > Reservation.reservation_id]
-  expected_start DATETIME
-  expected_end DATETIME
-  actual_start DATETIME
-  actual_end DATETIME
-  odometer_start INT [not null]
-  odometer_end INT [not null]
-}
-
-Table Vehicle {
-  vehicle_id INT [pk]
-  brand_name VARCHAR(50)
-  vehicle_type VARCHAR(30)
-  rental_hour_price DECIMAL (5, 2) [not null]
-  kilometer_price DECIMAL (5, 2) [not null]
-  // Odometer INT [not null]
-}
-
-Table Driver {
-  driver_id INT [pk]
-  driver_name VARCHAR(255) 
-  driver_licence INT [not null]
-}
-
-Table Reservation {
-  reservation_id INT [pk]
-  client_id INT [ref: > C.Client_ID]
-  requested_vehicle_type VARCHAR(30) [not null] 
-  location VARCHAR(255) [not null]
-  appointment_date DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
-  appointment_duration DATETIME [note: "Expected_Duration > 1 year"]// time in minutes
+Table Reservation as Res {
+  Reservation_ID INT [pk] // pk can never be null
+  Client_ID INT [ref: > C.Client_ID] // if referenced is pk, then won't be null, unless deleted
+  Vehicle_Type Vehicle_Type [not null] 
+  Location VARCHAR(255) [not null]
+  Appointment_Date DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
+  Reservation_Length INT [note: "Expected_Duration > 1 year"]// time in minutes
   // Check Expected_Duration > 525600 // 1 year in minutes
   // The expected duration of making disposal of vehicle and driver.
   // Assume Expected_Duration = for both vehicle and driver
 }
 
-
-
-Table Client as C  {
-  Client_ID INT [pk]
-  Address VARCHAR(255) 
+Table Mission as M{
+  Mission_ID INT [pk]
+  Vehicle_ID INT  [ref: < V.Vehicle_ID, not null]
+  Driver_ID INT [ref: < D.Driver_ID, not null]
+  Reservation_ID INT [ref: > Res.Reservation_ID, not null]
+  Start_Mission DATETIME [not null]
+  End_Mission DATETIME [not null]
+  Actual_Start_Mission DATETIME
+  Actual_End_Mission DATETIME
+  Odometer_Start INT
+  Odometer_Return INT
 }
 
-Table Business as B{
-  Business_ID INT UNIQUE [ ref: - C.Client_ID]
-  Name VARCHAR(255)
+// Billing
+Table Tax as T {
+  Tax_ID INT [pk]
+  Federal_tax DECIMAL(4, 2) [not null]
+  Provincal_tax DECIMAL(4, 2) [not null]
 }
 
-Table Person as P{
-  Person_ID INT [ref: - C.Client_ID]
-  Name VARCHAR(255)
+Table Invoice as Invoi{
+  Invoice_ID INT [pk]
+  Tax_ID INT [ref: > T.Tax_ID]
+  Payment_Type Payment_Type [not null]
+  isPaid BOOLEAN [not null, default: "0"]
 }
 
+Table LineOrder as LO{
+  Mission_ID INT [pk, ref: > M.Mission_ID]
+  Invoice_ID INT [pk, ref: > Invoi.Invoice_ID]
+}
 
-
-
-
-
-
-
-
+// Enums 
 
 enum Payment_Type {
     Credit_Card
@@ -97,4 +81,17 @@ enum Vehicle_Type {
   Heavyweight
   Tourist
   SuperHeavyweight
+}
+
+enum Client_Type {
+  Person
+  Business
+}
+
+// This is what prof proposed. I propose keeping it simple and using
+// Vehicle_Type enum to represent license type of a Driver 
+enum License_Type {
+  1 // Heavy
+  3 // Super Heavy
+  5 // Tourist
 }
