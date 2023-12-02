@@ -36,7 +36,8 @@ Table Business as B{
 
 Table Person as P{
   Person_ID INT [pk, ref: - C.Client_ID]
-  Name VARCHAR(255)
+  First_Name VARCHAR(255) 
+  Last_Name VARCHAR(255) 
 }
 
 Table Reservation as Res {
@@ -61,7 +62,8 @@ Table Vehicle as V{
 
 Table Driver as D {
   Driver_ID INT [pk]
-  Name VARCHAR(255) 
+  First_Name VARCHAR(255) 
+  Last_Name VARCHAR(255) 
 }
 
 Table DriverLicense as DL {
