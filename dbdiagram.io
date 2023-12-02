@@ -64,8 +64,8 @@ Table Driver as D {
   Name VARCHAR(255) 
 }
 
-Table DriverLicence as DL {
-  DriverLicence_ID VARCHAR(255) [pk]
+Table DriverLicense as DL {
+  DriverLicense_ID VARCHAR(255) [pk]
   Driver_ID INT [ref: > D.Driver_ID]
   Licence_Type Vehicle_Type [not null]
 }
