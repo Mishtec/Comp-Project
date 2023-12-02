@@ -1,33 +1,39 @@
 CREATE TABLE LineOrder (
-  Line_ID INT PRIMARY KEY,
   Mission_ID INT,
   Invoice_ID INT,
+  PRIMARY KEY (Mission_ID, Invoice_ID),
   FOREIGN KEY (Mission_ID) REFERENCES Mission (Mission_ID),
   FOREIGN KEY (Invoice_ID) REFERENCES Invoice (Invoice_ID)
 );
 
 CREATE TABLE Invoice (
   Invoice_ID INT PRIMARY KEY,
-  Amount DECIMAL(10,2) NOT NULL,
-  Payment ENUM ('Credit_Card', 'Cash', 'Check') NOT NULL,
-  Paid BOOLEAN NOT NULL DEFAULT 0
+  Tax_ID INT,
+  Payment_Type ENUM ('Credit_Card', 'Cash', 'Check') NOT NULL,
+  isPaid BOOLEAN NOT NULL DEFAULT 0,
+  FOREIGN KEY (Tax_ID) REFERENCES Tax (Tax_ID)
+);
+
+CREATE TABLE Tax (
+  Tax_ID INT PRIMARY KEY,
+  Federal_tax DECIMAL(4, 2) NOT NULL,
+  Provincal_tax DECIMAL(4, 2) NOT NULL
 );
 
 CREATE TABLE Client (
   Client_ID INT PRIMARY KEY,
-  Name VARCHAR(255),
-  Address VARCHAR(255),
+  Address VARCHAR(255)
 );
 
 CREATE TABLE Business (
   Business_ID INT PRIMARY KEY,
-  Name VARCHAR(255) UNIQUE NOT NULL,
+  Name VARCHAR(255) UNIQUE,
   FOREIGN KEY (Business_ID) REFERENCES Client (Client_ID)
 );
 
 CREATE TABLE Person (
   Person_ID INT PRIMARY KEY,
-  Name VARCHAR(255) NOT NULL,
+  Name VARCHAR(255),
   FOREIGN KEY (Person_ID) REFERENCES Client (Client_ID)
 );
 
@@ -35,17 +41,17 @@ CREATE TABLE Reservation (
   Reservation_ID INT PRIMARY KEY,
   Client_ID INT,
   Vehicle_Type ENUM ('Heavyweight', 'Tourist', 'SuperHeavyweight') NOT NULL,
-  Rendezvous VARCHAR(255) NOT NULL,
-  Appointment DATETIME NOT NULL,
-  Expected_Duration INT COMMENT 'Expected_Duration > 1 year',
+  Location VARCHAR(255) NOT NULL,
+  Appointment_Date DATETIME NOT NULL,
+  Reservation_Length INT COMMENT 'Expected_Duration > 1 year',
   FOREIGN KEY (Client_ID) REFERENCES Client (Client_ID)
 );
 
 CREATE TABLE Vehicle (
   Vehicle_ID INT PRIMARY KEY,
-  Odometer INT NOT NULL,
-  Duration DECIMAL(1,2) NOT NULL,
-  Browsed_Kilometers DECIMAL(1,2) NOT NULL,
+  Brand_Name VARCHAR(255),
+  Hourly_Rate DECIMAL(5, 2) NOT NULL,
+  Kilometer_Rate DECIMAL(5, 2) NOT NULL,
   Vehicle_Type ENUM ('Heavyweight', 'Tourist', 'SuperHeavyweight') NOT NULL
 );
 
@@ -54,8 +60,8 @@ CREATE TABLE Driver (
   Name VARCHAR(255)
 );
 
-CREATE TABLE DriverLicence (
-  DriverLicence_ID VARCHAR(255) PRIMARY KEY,
+CREATE TABLE DriverLicense (
+  DriverLicense_ID VARCHAR(255) PRIMARY KEY,
   Driver_ID INT,
   Licence_Type ENUM ('Heavyweight', 'Tourist', 'SuperHeavyweight') NOT NULL,
   FOREIGN KEY (Driver_ID) REFERENCES Driver (Driver_ID)
@@ -63,16 +69,16 @@ CREATE TABLE DriverLicence (
 
 CREATE TABLE Mission (
   Mission_ID INT PRIMARY KEY,
-  Client_ID INT,
   Vehicle_ID INT,
   Driver_ID INT,
+  Reservation_ID INT,
   Start_Mission DATETIME,
-  END_Mission DATETIME,
+  End_Mission DATETIME,
   Actual_Start_Mission DATETIME NOT NULL,
-  Actual_END_Mission DATETIME NOT NULL,
+  Actual_End_Mission DATETIME NOT NULL,
   Odometer_Start INT NOT NULL,
   Odometer_Return INT NOT NULL,
-  FOREIGN KEY (Client_ID) REFERENCES Client (Client_ID),
   FOREIGN KEY (Vehicle_ID) REFERENCES Vehicle (Vehicle_ID),
-  FOREIGN KEY (Driver_ID) REFERENCES Driver (Driver_ID)
+  FOREIGN KEY (Driver_ID) REFERENCES Driver (Driver_ID),
+  FOREIGN KEY (Reservation_ID) REFERENCES Reservation (Reservation_ID)
 );
