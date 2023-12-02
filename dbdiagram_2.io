@@ -28,7 +28,7 @@ Table Client as C  {
 Table Reservation as Res {
   Reservation_ID INT [pk] // pk can never be null
   Client_ID INT [ref: > C.Client_ID] // if referenced is pk, then won't be null, unless deleted
-  Vehicle_Type Vehicle_Type [not null] 
+  Requested_Vehicle_Type Vehicle_Type [not null] 
   Location VARCHAR(255) [not null]
   Appointment_Date DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
   Reservation_Length INT [note: "Expected_Duration > 1 year"]// time in minutes
