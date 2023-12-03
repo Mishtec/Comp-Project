@@ -88,6 +88,8 @@ enum Client_Type {
   Business
 }
 
+// This is based off actual Quebec license types (along with info provided by prof)
+// A Licence of type 1 should allow the driver to driver 3 and 5, and class 3 of type 5
 enum License_Type {
   1 // Heavy
   3 // Super Heavy
