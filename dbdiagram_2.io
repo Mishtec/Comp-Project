@@ -15,7 +15,7 @@ Table Driver as D {
   Driver_ID INT [pk]
   First_Name VARCHAR(255) 
   Last_Name VARCHAR(255) 
-  License_Type Vehicle_Type
+  License_Type License_Type
 }
 
 Table Client as C  {
@@ -88,8 +88,6 @@ enum Client_Type {
   Business
 }
 
-// This is what prof proposed. I propose keeping it simple and using
-// Vehicle_Type enum to represent license type of a Driver 
 enum License_Type {
   1 // Heavy
   3 // Super Heavy
