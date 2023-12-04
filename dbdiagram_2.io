@@ -15,7 +15,7 @@ Table Driver as D {
   Driver_ID INT [pk]
   First_Name VARCHAR(255) 
   Last_Name VARCHAR(255) 
-  License_Type License_Type
+  License_Type License_Type [not null]
 }
 
 Table Client as C  {
@@ -27,11 +27,11 @@ Table Client as C  {
 
 Table Reservation as Res {
   Reservation_ID INT [pk] // pk can never be null
-  Client_ID INT [ref: > C.Client_ID] // if referenced is pk, then won't be null, unless deleted
+  Client_ID INT [ref: > C.Client_ID, not null] // if referenced is pk, then won't be null, unless deleted
   Requested_Vehicle_Type Vehicle_Type [not null] 
   Location VARCHAR(255) [not null]
   Appointment_Date DATETIME [not null]// format YYYY-MM-DD hh:mm:ss
-  Reservation_Length INT [note: "Expected_Duration > 1 year"]// time in minutes
+  Reservation_Length INT [note: "Expected_Duration > 1 year", not null]// time in minutes
   // Check Expected_Duration > 525600 // 1 year in minutes
   // The expected duration of making disposal of vehicle and driver.
   // Assume Expected_Duration = for both vehicle and driver
@@ -59,12 +59,12 @@ Table Tax as T {
 
 Table Invoice as Invoi{
   Invoice_ID INT [pk]
-  Tax_ID INT [ref: > T.Tax_ID]
+  Tax_ID INT [ref: > T.Tax_ID, not null]
   Payment_Type Payment_Type [not null]
   isPaid BOOLEAN [not null, default: "0"]
 }
 
-Table LineOrder as LO{
+Table LineInvoice as LO{
   Mission_ID INT [pk, ref: > M.Mission_ID]
   Invoice_ID INT [pk, ref: > Invoi.Invoice_ID]
 }
